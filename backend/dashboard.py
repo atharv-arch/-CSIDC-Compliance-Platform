@@ -381,25 +381,32 @@ st.sidebar.markdown("""
 st.sidebar.markdown("---")
 
 # Feature 8: Role-Based Access
-role = st.sidebar.selectbox("👤 Select Role", ["Admin", "Inspector"])
+st.sidebar.markdown("""
+<p style="color:#64748b; font-size:10px; text-transform:uppercase; letter-spacing:1px; font-weight:600; margin-bottom:6px;">🔐 Access Level</p>
+""", unsafe_allow_html=True)
+role = st.sidebar.selectbox("Select Role", ["Senior Officer (Admin)", "Field Inspector"])
 
-if role == "Admin":
+if role == "Senior Officer (Admin)":
+    st.sidebar.caption("Full access to all modules, analytics & system configuration")
     page_options = [
         "📊 Overview Dashboard",
+        "🔍 Single Plot Comparison",
         "🗺 Multi-Plot Monitoring",
+        "📋 Inspection History",
         "🌐 3D Risk Map & Heatmap",
         "🛰 CSIDC Live GIS Portal",
         "📈 Analytics & Trends",
-        "🔮 Predictive Analytics",
         "🏘 District-Wise Analytics",
-        "🔍 Single Plot Comparison",
-        "📋 Inspection History",
+        "🔮 Predictive Analytics",
         "💬 Data Query",
         "🏗 System Architecture",
     ]
 else:
+    st.sidebar.caption("Field-level access for inspections & compliance checks")
     page_options = [
         "🔍 Single Plot Comparison",
+        "📋 Inspection History",
+        "🛰 CSIDC Live GIS Portal",
     ]
 
 page = st.sidebar.radio("Select Module", page_options)
