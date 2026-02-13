@@ -388,26 +388,28 @@ role = st.sidebar.selectbox("Select Role", ["Senior Officer (Admin)", "Field Ins
 
 if role == "Senior Officer (Admin)":
     st.sidebar.caption("Full access to all modules, analytics & system configuration")
-    page_options = [
-        "📊 Overview Dashboard",
-        "🔍 Single Plot Comparison",
-        "🗺 Multi-Plot Monitoring",
-        "📋 Inspection History",
-        "🌐 3D Risk Map & Heatmap",
+    page_options = ["🔍 Single Plot Comparison"]
+    if len(st.session_state.plots_data) > 0:
+        page_options += [
+            "📊 Overview Dashboard",
+            "🗺 Multi-Plot Monitoring",
+            "📋 Inspection History",
+            "🌐 3D Risk Map & Heatmap",
+            "📈 Analytics & Trends",
+            "🏘 District-Wise Analytics",
+            "🔮 Predictive Analytics",
+            "💬 Data Query",
+        ]
+    page_options += [
         "🛰 CSIDC Live GIS Portal",
-        "📈 Analytics & Trends",
-        "🏘 District-Wise Analytics",
-        "🔮 Predictive Analytics",
-        "💬 Data Query",
         "🏗 System Architecture",
     ]
 else:
     st.sidebar.caption("Field-level access for inspections & compliance checks")
-    page_options = [
-        "🔍 Single Plot Comparison",
-        "📋 Inspection History",
-        "🛰 CSIDC Live GIS Portal",
-    ]
+    page_options = ["🔍 Single Plot Comparison"]
+    if len(st.session_state.plots_data) > 0:
+        page_options += ["📋 Inspection History"]
+    page_options += ["🛰 CSIDC Live GIS Portal"]
 
 page = st.sidebar.radio("Select Module", page_options)
 
