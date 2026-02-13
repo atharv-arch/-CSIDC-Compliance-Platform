@@ -388,6 +388,7 @@ if role == "Admin":
         "📊 Overview Dashboard",
         "🗺 Multi-Plot Monitoring",
         "🌐 3D Risk Map & Heatmap",
+        "🛰 CSIDC Live GIS Portal",
         "📈 Analytics & Trends",
         "🔮 Predictive Analytics",
         "🏘 District-Wise Analytics",
@@ -1148,3 +1149,80 @@ elif page == "💬 Data Query":
 
     render_premium_header("Intelligent Data Query", "Ask natural language questions about your compliance data")
     render_data_query(st.session_state.plots_data)
+
+
+# ==============================
+# PAGE: CSIDC Live GIS Portal
+# ==============================
+elif page == "🛰 CSIDC Live GIS Portal":
+
+    render_premium_header("CSIDC Government GIS Portal", "Live integration with Chhattisgarh State Industrial Development Corporation geospatial database")
+
+    # Info cards
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.markdown("""
+        <div style="background:#1a1f35; border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:16px; text-align:center;">
+            <div style="font-size:28px; margin-bottom:8px;">🏭</div>
+            <div style="color:#94a3b8; font-size:10px; text-transform:uppercase; letter-spacing:1px; font-weight:600;">Data Source</div>
+            <div style="color:#f1f5f9; font-size:14px; font-weight:700; margin-top:4px;">Official CSIDC GeoPortal</div>
+        </div>
+        """, unsafe_allow_html=True)
+    with col2:
+        st.markdown("""
+        <div style="background:#1a1f35; border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:16px; text-align:center;">
+            <div style="font-size:28px; margin-bottom:8px;">📍</div>
+            <div style="color:#94a3b8; font-size:10px; text-transform:uppercase; letter-spacing:1px; font-weight:600;">Coverage</div>
+            <div style="color:#f1f5f9; font-size:14px; font-weight:700; margin-top:4px;">All CG Districts</div>
+        </div>
+        """, unsafe_allow_html=True)
+    with col3:
+        st.markdown("""
+        <div style="background:#1a1f35; border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:16px; text-align:center;">
+            <div style="font-size:28px; margin-bottom:8px;">🔗</div>
+            <div style="color:#94a3b8; font-size:10px; text-transform:uppercase; letter-spacing:1px; font-weight:600;">Integration</div>
+            <div style="color:#f1f5f9; font-size:14px; font-weight:700; margin-top:4px;">GeoServer WFS API</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    st.markdown("<div style='height:12px'></div>", unsafe_allow_html=True)
+
+    # Embed the live CSIDC GIS portal
+    st.markdown("""
+    <div style="
+        border-radius: 14px;
+        overflow: hidden;
+        border: 1px solid rgba(59, 130, 246, 0.3);
+        box-shadow: 0 4px 20px rgba(59, 130, 246, 0.15);
+    ">
+        <iframe
+            src="https://cggis.cgstate.gov.in/csidc/"
+            width="100%"
+            height="700"
+            style="border: none; border-radius: 14px;"
+            loading="lazy"
+        ></iframe>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # Legend below
+    st.markdown("""
+    <div style="
+        background: linear-gradient(135deg, #1a1f35 0%, #0f1420 100%);
+        border: 1px solid rgba(255,255,255,0.06);
+        border-radius: 12px;
+        padding: 16px 20px;
+        margin-top: 16px;
+    ">
+        <div style="color:#64748b; font-size:10px; text-transform:uppercase; letter-spacing:1px; font-weight:600; margin-bottom:10px;">🔍 Available Layers</div>
+        <div style="display:flex; gap:20px; flex-wrap:wrap;">
+            <span style="color:#3b82f6; font-size:13px;">🟦 Industrial Areas</span>
+            <span style="color:#22c55e; font-size:13px;">🟩 Land Bank Areas</span>
+            <span style="color:#f59e0b; font-size:13px;">🟨 Amenities</span>
+            <span style="color:#ef4444; font-size:13px;">🟥 Directorate Industrial Area</span>
+        </div>
+        <div style="color:#475569; font-size:11px; margin-top:10px;">
+            Source: cggis.cgstate.gov.in/csidc/ • Powered by GeoServer WFS/WMS • © Govt. of Chhattisgarh
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
