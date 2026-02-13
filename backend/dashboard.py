@@ -745,28 +745,80 @@ elif page == "🔍 Single Plot Comparison":
         }
         return geojson
 
-    # --- Dual Input Mode ---
-    input_tab1, input_tab2 = st.tabs(["📝 Paste GeoJSON", "🖼 Upload Image (PNG/JPG)"])
+    # --- Pre-loaded Reference Boundaries (from CSIDC records) ---
+    CSIDC_PLOT_REGISTRY = {
+        "Plot IA-001 | Urla Industrial Area, Raipur": {
+            "type": "Polygon",
+            "coordinates": [[[81.5950, 21.2750], [81.5980, 21.2750], [81.5980, 21.2720], [81.5950, 21.2720], [81.5950, 21.2750]]]
+        },
+        "Plot IA-002 | Siltara Industrial Area, Raipur": {
+            "type": "Polygon",
+            "coordinates": [[[81.6850, 21.3450], [81.6900, 21.3450], [81.6900, 21.3400], [81.6850, 21.3400], [81.6850, 21.3450]]]
+        },
+        "Plot IA-003 | Borai Industrial Area, Durg": {
+            "type": "Polygon",
+            "coordinates": [[[81.3500, 21.1800], [81.3560, 21.1800], [81.3560, 21.1750], [81.3500, 21.1750], [81.3500, 21.1800]]]
+        },
+        "Plot IA-004 | Bhanpuri Industrial Area, Raipur": {
+            "type": "Polygon",
+            "coordinates": [[[81.6200, 21.2400], [81.6250, 21.2400], [81.6250, 21.2360], [81.6200, 21.2360], [81.6200, 21.2400]]]
+        },
+        "Plot IA-005 | Sirgitti Industrial Area, Bilaspur": {
+            "type": "Polygon",
+            "coordinates": [[[82.1500, 22.0700], [82.1560, 22.0700], [82.1560, 22.0650], [82.1500, 22.0650], [82.1500, 22.0700]]]
+        },
+        "Custom — Paste GeoJSON manually": None
+    }
+
+    # ─── Section 1: Reference Boundary (from CSIDC records) ───
+    st.markdown("""
+    <div style="background:#1a1f35; border:1px solid rgba(59,130,246,0.2); border-left:4px solid #3b82f6; border-radius:12px; padding:16px; margin-bottom:16px;">
+        <p style="color:#3b82f6; font-size:13px; font-weight:700; margin:0 0 6px 0;">📋 STEP 1 — Reference Boundary (Government Records)</p>
+        <p style="color:#94a3b8; font-size:12px; margin:0;">The allotted boundary is pre-loaded from CSIDC industrial area registry. Select the plot or paste custom GeoJSON.</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    selected_plot = st.selectbox("📌 Select Allotted Plot from CSIDC Registry", list(CSIDC_PLOT_REGISTRY.keys()))
 
     reference_geojson = None
-    current_geojson = None
-
-    with input_tab1:
-        st.markdown("<p style='color:#94a3b8; font-size:12px; margin-bottom:8px;'>Paste raw GeoJSON polygon data for each boundary</p>", unsafe_allow_html=True)
-        reference_input = st.text_area("Reference Boundary GeoJSON", height=150, key="ref_geo")
-        current_input = st.text_area("Current Boundary GeoJSON", height=150, key="cur_geo")
-        if reference_input and current_input:
+    if selected_plot == "Custom — Paste GeoJSON manually":
+        reference_input = st.text_area("Paste Reference Boundary GeoJSON", height=120, key="ref_geo")
+        if reference_input:
             try:
                 reference_geojson = json.loads(reference_input)
+            except json.JSONDecodeError:
+                st.error("❌ Invalid JSON format.")
+    else:
+        reference_geojson = CSIDC_PLOT_REGISTRY[selected_plot]
+        st.success(f"✅ Reference boundary loaded — {selected_plot}")
+        with st.expander("View Reference GeoJSON"):
+            st.json(reference_geojson)
+
+    st.markdown("<div style='height:8px'></div>", unsafe_allow_html=True)
+
+    # ─── Section 2: Current Boundary (User Upload) ───
+    st.markdown("""
+    <div style="background:#1a1f35; border:1px solid rgba(249,115,22,0.2); border-left:4px solid #f97316; border-radius:12px; padding:16px; margin-bottom:16px;">
+        <p style="color:#f97316; font-size:13px; font-weight:700; margin:0 0 6px 0;">📤 STEP 2 — Current Boundary (Site Survey / Drone Image)</p>
+        <p style="color:#94a3b8; font-size:12px; margin:0;">Upload the actual on-ground boundary from a drone survey image or paste the surveyed GeoJSON.</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    current_geojson = None
+    cur_tab1, cur_tab2 = st.tabs(["📝 Paste GeoJSON", "🖼 Upload Drone / Satellite Image"])
+
+    with cur_tab1:
+        current_input = st.text_area("Current Boundary GeoJSON", height=150, key="cur_geo")
+        if current_input:
+            try:
                 current_geojson = json.loads(current_input)
             except json.JSONDecodeError:
-                st.error("❌ Invalid JSON format. Please paste valid GeoJSON.")
+                st.error("❌ Invalid JSON format.")
 
-    with input_tab2:
+    with cur_tab2:
         st.markdown("""
-        <div style="background:#1a1f35; border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:16px; margin-bottom:16px;">
-            <p style="color:#3b82f6; font-size:13px; font-weight:700; margin:0 0 6px 0;">🔄 Automatic Image → GeoJSON Conversion</p>
-            <p style="color:#94a3b8; font-size:12px; margin:0;">Upload a PNG/JPG image of a plot boundary. OpenCV will detect the boundary contour and convert it to GeoJSON polygon automatically.</p>
+        <div style="background:rgba(249,115,22,0.08); border:1px solid rgba(249,115,22,0.15); border-radius:10px; padding:12px; margin-bottom:12px;">
+            <p style="color:#fb923c; font-size:12px; margin:0;">🔄 Upload a drone/satellite image → OpenCV auto-detects the plot boundary and converts to GeoJSON</p>
         </div>
         """, unsafe_allow_html=True)
 
@@ -777,34 +829,19 @@ elif page == "🔍 Single Plot Comparison":
             center_lng = st.number_input("Center Longitude", value=81.6296, format="%.4f", key="img_lng")
         with geo_col3:
             scale = st.number_input("Scale (°/pixel)", value=0.000005, format="%.6f", key="img_scale",
-                                     help="Smaller = zoomed in. For satellite imagery at ~18 zoom, use 0.000005")
+                                     help="Smaller = zoomed in. Default works for ~18 zoom level")
 
-        img_col1, img_col2 = st.columns(2)
-        with img_col1:
-            ref_image = st.file_uploader("📤 Reference Boundary Image", type=["png", "jpg", "jpeg"], key="ref_img")
-            if ref_image:
-                st.image(ref_image, caption="Reference Boundary", use_container_width=True)
-                ref_image.seek(0)
-                reference_geojson = image_to_geojson(ref_image, center_lat, center_lng, scale)
-                if reference_geojson:
-                    st.success(f"✅ Extracted {len(reference_geojson['coordinates'][0])} boundary points")
-                    with st.expander("View Generated GeoJSON"):
-                        st.json(reference_geojson)
-                else:
-                    st.error("❌ Could not detect boundary in image. Try a clearer image.")
-
-        with img_col2:
-            cur_image = st.file_uploader("📤 Current Boundary Image", type=["png", "jpg", "jpeg"], key="cur_img")
-            if cur_image:
-                st.image(cur_image, caption="Current Boundary", use_container_width=True)
-                cur_image.seek(0)
-                current_geojson = image_to_geojson(cur_image, center_lat, center_lng, scale)
-                if current_geojson:
-                    st.success(f"✅ Extracted {len(current_geojson['coordinates'][0])} boundary points")
-                    with st.expander("View Generated GeoJSON"):
-                        st.json(current_geojson)
-                else:
-                    st.error("❌ Could not detect boundary in image. Try a clearer image.")
+        cur_image = st.file_uploader("📤 Upload Current Boundary Image", type=["png", "jpg", "jpeg"], key="cur_img")
+        if cur_image:
+            st.image(cur_image, caption="Uploaded Survey Image", use_container_width=True)
+            cur_image.seek(0)
+            current_geojson = image_to_geojson(cur_image, center_lat, center_lng, scale)
+            if current_geojson:
+                st.success(f"✅ Extracted {len(current_geojson['coordinates'][0])} boundary points from image")
+                with st.expander("View Generated GeoJSON"):
+                    st.json(current_geojson)
+            else:
+                st.error("❌ Could not detect boundary. Try a clearer image with distinct edges.")
 
     col_a, col_b = st.columns(2)
     with col_a:
