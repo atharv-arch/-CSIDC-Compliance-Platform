@@ -746,93 +746,94 @@ elif page == "🔍 Single Plot Comparison":
         return geojson
 
     # --- Pre-loaded Reference Boundaries (from CSIDC records) ---
+    # Individual plot boundaries (~30-50m sides = 1,500-2,500 m² each)
     CSIDC_PLOT_REGISTRY = {
         # ── Raipur District ──
         "Plot IA-001 | Urla Industrial Area, Raipur": {
-            "type": "Polygon", "coordinates": [[[81.5950, 21.2750], [81.5980, 21.2750], [81.5980, 21.2720], [81.5950, 21.2720], [81.5950, 21.2750]]]
+            "type": "Polygon", "coordinates": [[[81.5950, 21.2750], [81.5954, 21.2750], [81.5954, 21.2747], [81.5950, 21.2747], [81.5950, 21.2750]]]
         },
         "Plot IA-002 | Siltara Industrial Area, Raipur": {
-            "type": "Polygon", "coordinates": [[[81.6850, 21.3450], [81.6900, 21.3450], [81.6900, 21.3400], [81.6850, 21.3400], [81.6850, 21.3450]]]
+            "type": "Polygon", "coordinates": [[[81.6850, 21.3450], [81.6855, 21.3450], [81.6855, 21.3446], [81.6850, 21.3446], [81.6850, 21.3450]]]
         },
         "Plot IA-003 | Bhanpuri Industrial Area, Raipur": {
-            "type": "Polygon", "coordinates": [[[81.6200, 21.2400], [81.6250, 21.2400], [81.6250, 21.2360], [81.6200, 21.2360], [81.6200, 21.2400]]]
+            "type": "Polygon", "coordinates": [[[81.6200, 21.2400], [81.6205, 21.2400], [81.6205, 21.2396], [81.6200, 21.2396], [81.6200, 21.2400]]]
         },
         "Plot IA-004 | Gondwara Industrial Area, Raipur": {
-            "type": "Polygon", "coordinates": [[[81.6100, 21.2300], [81.6140, 21.2300], [81.6140, 21.2265], [81.6100, 21.2265], [81.6100, 21.2300]]]
+            "type": "Polygon", "coordinates": [[[81.6100, 21.2300], [81.6104, 21.2300], [81.6104, 21.2297], [81.6100, 21.2297], [81.6100, 21.2300]]]
         },
         "Plot IA-005 | Tatibandh Industrial Area, Raipur": {
-            "type": "Polygon", "coordinates": [[[81.5800, 21.2900], [81.5845, 21.2900], [81.5845, 21.2865], [81.5800, 21.2865], [81.5800, 21.2900]]]
+            "type": "Polygon", "coordinates": [[[81.5800, 21.2900], [81.5805, 21.2900], [81.5805, 21.2896], [81.5800, 21.2896], [81.5800, 21.2900]]]
         },
         # ── Durg District ──
         "Plot IA-006 | Borai Industrial Area, Durg": {
-            "type": "Polygon", "coordinates": [[[81.3500, 21.1800], [81.3560, 21.1800], [81.3560, 21.1750], [81.3500, 21.1750], [81.3500, 21.1800]]]
+            "type": "Polygon", "coordinates": [[[81.3500, 21.1800], [81.3505, 21.1800], [81.3505, 21.1796], [81.3500, 21.1796], [81.3500, 21.1800]]]
         },
         "Plot IA-007 | Kumhari Industrial Area, Durg": {
-            "type": "Polygon", "coordinates": [[[81.3800, 21.2200], [81.3850, 21.2200], [81.3850, 21.2160], [81.3800, 21.2160], [81.3800, 21.2200]]]
+            "type": "Polygon", "coordinates": [[[81.3800, 21.2200], [81.3805, 21.2200], [81.3805, 21.2196], [81.3800, 21.2196], [81.3800, 21.2200]]]
         },
         "Plot IA-008 | Bhilai Industrial Area, Durg": {
-            "type": "Polygon", "coordinates": [[[81.3200, 21.2100], [81.3260, 21.2100], [81.3260, 21.2055], [81.3200, 21.2055], [81.3200, 21.2100]]]
+            "type": "Polygon", "coordinates": [[[81.3200, 21.2100], [81.3205, 21.2100], [81.3205, 21.2096], [81.3200, 21.2096], [81.3200, 21.2100]]]
         },
         "Plot IA-009 | Anjora Industrial Area, Durg": {
-            "type": "Polygon", "coordinates": [[[81.2800, 21.1600], [81.2850, 21.1600], [81.2850, 21.1560], [81.2800, 21.1560], [81.2800, 21.1600]]]
+            "type": "Polygon", "coordinates": [[[81.2800, 21.1600], [81.2805, 21.1600], [81.2805, 21.1596], [81.2800, 21.1596], [81.2800, 21.1600]]]
         },
         # ── Bilaspur District ──
         "Plot IA-010 | Sirgitti Industrial Area, Bilaspur": {
-            "type": "Polygon", "coordinates": [[[82.1500, 22.0700], [82.1560, 22.0700], [82.1560, 22.0650], [82.1500, 22.0650], [82.1500, 22.0700]]]
+            "type": "Polygon", "coordinates": [[[82.1500, 22.0700], [82.1505, 22.0700], [82.1505, 22.0696], [82.1500, 22.0696], [82.1500, 22.0700]]]
         },
         "Plot IA-011 | Tifra Industrial Area, Bilaspur": {
-            "type": "Polygon", "coordinates": [[[82.1300, 22.0500], [82.1355, 22.0500], [82.1355, 22.0460], [82.1300, 22.0460], [82.1300, 22.0500]]]
+            "type": "Polygon", "coordinates": [[[82.1300, 22.0500], [82.1305, 22.0500], [82.1305, 22.0496], [82.1300, 22.0496], [82.1300, 22.0500]]]
         },
         "Plot IA-012 | Kota Industrial Area, Bilaspur": {
-            "type": "Polygon", "coordinates": [[[82.1700, 22.0900], [82.1750, 22.0900], [82.1750, 22.0860], [82.1700, 22.0860], [82.1700, 22.0900]]]
+            "type": "Polygon", "coordinates": [[[82.1700, 22.0900], [82.1705, 22.0900], [82.1705, 22.0896], [82.1700, 22.0896], [82.1700, 22.0900]]]
         },
         # ── Korba District ──
         "Plot IA-013 | Korba Industrial Area, Korba": {
-            "type": "Polygon", "coordinates": [[[82.6800, 22.3500], [82.6860, 22.3500], [82.6860, 22.3455], [82.6800, 22.3455], [82.6800, 22.3500]]]
+            "type": "Polygon", "coordinates": [[[82.6800, 22.3500], [82.6805, 22.3500], [82.6805, 22.3496], [82.6800, 22.3496], [82.6800, 22.3500]]]
         },
         "Plot IA-014 | Kusmunda Industrial Area, Korba": {
-            "type": "Polygon", "coordinates": [[[82.7100, 22.3700], [82.7150, 22.3700], [82.7150, 22.3660], [82.7100, 22.3660], [82.7100, 22.3700]]]
+            "type": "Polygon", "coordinates": [[[82.7100, 22.3700], [82.7105, 22.3700], [82.7105, 22.3696], [82.7100, 22.3696], [82.7100, 22.3700]]]
         },
         # ── Rajnandgaon District ──
         "Plot IA-015 | Rajnandgaon Industrial Area, Rajnandgaon": {
-            "type": "Polygon", "coordinates": [[[81.0300, 21.1000], [81.0360, 21.1000], [81.0360, 21.0955], [81.0300, 21.0955], [81.0300, 21.1000]]]
+            "type": "Polygon", "coordinates": [[[81.0300, 21.1000], [81.0305, 21.1000], [81.0305, 21.0996], [81.0300, 21.0996], [81.0300, 21.1000]]]
         },
         "Plot IA-016 | Dongargarh Industrial Area, Rajnandgaon": {
-            "type": "Polygon", "coordinates": [[[80.7600, 21.1900], [80.7650, 21.1900], [80.7650, 21.1860], [80.7600, 21.1860], [80.7600, 21.1900]]]
+            "type": "Polygon", "coordinates": [[[80.7600, 21.1900], [80.7605, 21.1900], [80.7605, 21.1896], [80.7600, 21.1896], [80.7600, 21.1900]]]
         },
         # ── Jagdalpur / Bastar District ──
         "Plot IA-017 | Jagdalpur Industrial Area, Bastar": {
-            "type": "Polygon", "coordinates": [[[81.9600, 19.0800], [81.9660, 19.0800], [81.9660, 19.0755], [81.9600, 19.0755], [81.9600, 19.0800]]]
+            "type": "Polygon", "coordinates": [[[81.9600, 19.0800], [81.9605, 19.0800], [81.9605, 19.0796], [81.9600, 19.0796], [81.9600, 19.0800]]]
         },
         "Plot IA-018 | Nagarnar Industrial Area, Bastar": {
-            "type": "Polygon", "coordinates": [[[81.8900, 19.1200], [81.8960, 19.1200], [81.8960, 19.1155], [81.8900, 19.1155], [81.8900, 19.1200]]]
+            "type": "Polygon", "coordinates": [[[81.8900, 19.1200], [81.8905, 19.1200], [81.8905, 19.1196], [81.8900, 19.1196], [81.8900, 19.1200]]]
         },
         # ── Raigarh District ──
         "Plot IA-019 | Lara Industrial Area, Raigarh": {
-            "type": "Polygon", "coordinates": [[[83.3200, 22.0600], [83.3260, 22.0600], [83.3260, 22.0555], [83.3200, 22.0555], [83.3200, 22.0600]]]
+            "type": "Polygon", "coordinates": [[[83.3200, 22.0600], [83.3205, 22.0600], [83.3205, 22.0596], [83.3200, 22.0596], [83.3200, 22.0600]]]
         },
         "Plot IA-020 | Raigarh Industrial Area, Raigarh": {
-            "type": "Polygon", "coordinates": [[[83.3900, 21.8900], [83.3960, 21.8900], [83.3960, 21.8855], [83.3900, 21.8855], [83.3900, 21.8900]]]
+            "type": "Polygon", "coordinates": [[[83.3900, 21.8900], [83.3905, 21.8900], [83.3905, 21.8896], [83.3900, 21.8896], [83.3900, 21.8900]]]
         },
         # ── Surguja / Ambikapur ──
         "Plot IA-021 | Ambikapur Industrial Area, Surguja": {
-            "type": "Polygon", "coordinates": [[[83.1900, 23.1200], [83.1960, 23.1200], [83.1960, 23.1155], [83.1900, 23.1155], [83.1900, 23.1200]]]
+            "type": "Polygon", "coordinates": [[[83.1900, 23.1200], [83.1905, 23.1200], [83.1905, 23.1196], [83.1900, 23.1196], [83.1900, 23.1200]]]
         },
         # ── Kawardha / Kabirdham ──
         "Plot IA-022 | Kawardha Industrial Area, Kabirdham": {
-            "type": "Polygon", "coordinates": [[[81.2300, 22.0100], [81.2360, 22.0100], [81.2360, 22.0055], [81.2300, 22.0055], [81.2300, 22.0100]]]
+            "type": "Polygon", "coordinates": [[[81.2300, 22.0100], [81.2305, 22.0100], [81.2305, 22.0096], [81.2300, 22.0096], [81.2300, 22.0100]]]
         },
         # ── Mahasamund District ──
         "Plot IA-023 | Mahasamund Industrial Area, Mahasamund": {
-            "type": "Polygon", "coordinates": [[[82.0900, 21.1100], [82.0960, 21.1100], [82.0960, 21.1055], [82.0900, 21.1055], [82.0900, 21.1100]]]
+            "type": "Polygon", "coordinates": [[[82.0900, 21.1100], [82.0905, 21.1100], [82.0905, 21.1096], [82.0900, 21.1096], [82.0900, 21.1100]]]
         },
         # ── Dhamtari District ──
         "Plot IA-024 | Dhamtari Industrial Area, Dhamtari": {
-            "type": "Polygon", "coordinates": [[[81.5500, 20.7100], [81.5560, 20.7100], [81.5560, 20.7055], [81.5500, 20.7055], [81.5500, 20.7100]]]
+            "type": "Polygon", "coordinates": [[[81.5500, 20.7100], [81.5505, 20.7100], [81.5505, 20.7096], [81.5500, 20.7096], [81.5500, 20.7100]]]
         },
         # ── Janjgir-Champa District ──
         "Plot IA-025 | Janjgir Industrial Area, Janjgir-Champa": {
-            "type": "Polygon", "coordinates": [[[82.5700, 21.8200], [82.5760, 21.8200], [82.5760, 21.8155], [82.5700, 21.8155], [82.5700, 21.8200]]]
+            "type": "Polygon", "coordinates": [[[82.5700, 21.8200], [82.5705, 21.8200], [82.5705, 21.8196], [82.5700, 21.8196], [82.5700, 21.8200]]]
         },
         "Custom — Paste GeoJSON manually": None
     }
@@ -983,16 +984,24 @@ elif page == "🔍 Single Plot Comparison":
         reference_boundary = reference_geojson
         current_boundary = current_geojson
 
-        compare_response = requests.post(
-            f"{BACKEND_URL}/compare-boundaries",
-            json={
-                "reference": reference_boundary,
-                "current": current_boundary,
-                "tolerance_m2": 25
-            }
-        )
+        try:
+            compare_response = requests.post(
+                f"{BACKEND_URL}/compare-boundaries",
+                json={
+                    "reference": reference_boundary,
+                    "current": current_boundary,
+                    "tolerance_m2": 25
+                }
+            )
+        except requests.exceptions.ConnectionError:
+            st.error("❌ Cannot connect to backend. Make sure Flask is running: `python app.py`")
+            st.stop()
 
         compare_data = compare_response.json()
+
+        if "error" in compare_data:
+            st.error(f"❌ Backend error: {compare_data['error']}")
+            st.stop()
 
         enc = compare_data["encroachment_area"]
         unused = compare_data["unused_area"]

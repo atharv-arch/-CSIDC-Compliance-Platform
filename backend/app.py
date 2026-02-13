@@ -151,6 +151,12 @@ def compare_boundaries():
         current = shape(data["current"])
         tolerance_m2 = data.get("tolerance_m2", 25)
 
+        # Fix invalid geometries (self-intersecting polygons from map drawing)
+        if not reference.is_valid:
+            reference = reference.buffer(0)
+        if not current.is_valid:
+            current = current.buffer(0)
+
         def project_to_meters(geom):
             project = pyproj.Transformer.from_crs(
                 "EPSG:4326",
