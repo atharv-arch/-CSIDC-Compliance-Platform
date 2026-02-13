@@ -1200,6 +1200,9 @@ elif page == "🛰 CSIDC Live GIS Portal":
             width="100%"
             height="700"
             style="border: none; border-radius: 14px;"
+            sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-downloads allow-modals"
+            allow="geolocation; clipboard-write"
+            referrerpolicy="no-referrer-when-downgrade"
             loading="lazy"
         ></iframe>
     </div>
