@@ -537,19 +537,34 @@ if page == "📊 Overview Dashboard":
                 ]
                 wedges, texts, autotexts = ax2.pie(
                     risk_bins,
-                    labels=["Low Risk (80+)", "Moderate (50-79)", "High Risk (<50)"],
+                    labels=None,
                     colors=["#22c55e", "#f59e0b", "#ef4444"],
                     autopct="%1.1f%%",
+                    pctdistance=0.85,
                     startangle=90,
-                    wedgeprops=dict(edgecolor='#0a0e1a', linewidth=2)
+                    wedgeprops=dict(width=0.4, edgecolor='#0a0e1a', linewidth=2)
                 )
-                for text in texts:
-                    text.set_color('#94a3b8')
-                    text.set_fontsize(10)
+                
+                # Add legend to avoid label overlap
+                ax2.legend(
+                    wedges, 
+                    ["Low Risk (Score 80+)", "Moderate (50-79)", "High Risk (<50)"],
+                    title="Risk Levels",
+                    loc="center left",
+                    bbox_to_anchor=(1, 0, 0.5, 1),
+                    frameon=False,
+                    labelcolor="#94a3b8"
+                )
+
                 for autotext in autotexts:
                     autotext.set_color('#f1f5f9')
                     autotext.set_fontweight('bold')
-                ax2.set_title("Risk Score Distribution", fontweight='bold', pad=15)
+                    autotext.set_fontsize(9)
+                
+                # Add text in center of donut
+                ax2.text(0, 0, f"{total_plots}\nPlots", ha='center', va='center', fontsize=12, fontweight='bold', color='#f1f5f9')
+                
+                ax2.set_title("Risk Score Distribution", fontweight='bold', pad=15, color='#f1f5f9')
                 st.pyplot(fig2)
 
         st.markdown("---")
