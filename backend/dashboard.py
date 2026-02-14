@@ -22,7 +22,8 @@ from reportlab.lib import colors
 from reportlab.lib.units import inch
 import io
 
-BACKEND_URL = "http://127.0.0.1:5000"
+import os
+BACKEND_URL = os.environ.get("BACKEND_URL", "http://127.0.0.1:5000")
 
 st.set_page_config(page_title="CSIDC Compliance Intelligence Platform", layout="wide", initial_sidebar_state="expanded")
 
