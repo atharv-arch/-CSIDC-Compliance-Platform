@@ -23,7 +23,21 @@ from reportlab.lib.units import inch
 import io
 
 import os
-BACKEND_URL = os.environ.get("BACKEND_URL", "http://127.0.0.1:5000")
+
+# CONFIG: Backend URL (Editable in Sidebar for easy setup)
+if "backend_url" not in st.session_state:
+    st.session_state["backend_url"] = os.environ.get("BACKEND_URL", "http://127.0.0.1:5000")
+
+with st.sidebar:
+    st.markdown("### ⚙️ Connection Settings")
+    BACKEND_URL = st.text_input(
+        "Backend API URL",
+        value=st.session_state["backend_url"],
+        help="Paste your Render Backend URL here (e.g. https://your-app.onrender.com).",
+        key="backend_url_input"
+    )
+    # Update session state if changed
+    st.session_state["backend_url"] = BACKEND_URL
 
 st.set_page_config(page_title="CSIDC Compliance Intelligence Platform", layout="wide", initial_sidebar_state="expanded")
 
