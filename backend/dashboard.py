@@ -83,6 +83,70 @@ def generate_pdf(report_data):
 
 
 # ==============================
+# Image-to-GeoJSON conversion helper (Cached)
+# ==============================
+@st.cache_data
+def image_to_geojson(uploaded_file, center_lat, center_lng, scale_factor):
+    """Convert an uploaded PNG/JPG image to GeoJSON polygon using OpenCV contour detection."""
+    import cv2
+    uploaded_file.seek(0)
+    file_bytes = np.frombuffer(uploaded_file.read(), dtype=np.uint8)
+    img = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
+    if img is None:
+        return None
+
+    # Optimization: Resize if image is too large (speeds up processing)
+    height, width = img.shape[:2]
+    max_dim = 1024
+    if max(height, width) > max_dim:
+        scale = max_dim / max(height, width)
+        img = cv2.resize(img, (int(width * scale), int(height * scale)))
+        # Adjust scale factor to compensate for resizing
+        scale_factor = scale_factor / scale
+
+    # Convert to grayscale and threshold
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    blurred = cv2.GaussianBlur(gray, (5, 5), 0)
+
+    # Adaptive threshold for better edge detection
+    _, thresh = cv2.threshold(blurred, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+
+    # Find contours
+    contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    if not contours:
+        return None
+
+    # Get the largest contour
+    largest = max(contours, key=cv2.contourArea)
+
+    # Simplify the contour
+    epsilon = 0.01 * cv2.arcLength(largest, True)
+    approx = cv2.approxPolyDP(largest, epsilon, True)
+
+    # Get image dimensions for normalization
+    h, w = img.shape[:2]
+
+    # Convert pixel coordinates to geographic coordinates
+    # Scale: 1 pixel = scale_factor degrees
+    coords = []
+    for point in approx:
+        px, py = point[0]
+        lng = center_lng + (px - w / 2) * scale_factor
+        lat = center_lat - (py - h / 2) * scale_factor
+        coords.append([round(lng, 6), round(lat, 6)])
+
+    # Close the polygon
+    if coords[0] != coords[-1]:
+        coords.append(coords[0])
+
+    geojson = {
+        "type": "Polygon",
+        "coordinates": [coords]
+    }
+    return geojson
+
+
+# ==============================
 # Compute Risk Score (0-100) locally
 # ==============================
 def compute_risk_score(enc_area, unused_area, unused_pct):
@@ -762,55 +826,8 @@ elif page == "🔍 Single Plot Comparison":
 
     render_premium_header("Single Plot Compliance Comparison", "Compare reference vs current boundary — supports GeoJSON and image upload", live=False)
 
-    # Image-to-GeoJSON conversion helper
-    def image_to_geojson(uploaded_file, center_lat, center_lng, scale_factor):
-        """Convert an uploaded PNG/JPG image to GeoJSON polygon using OpenCV contour detection."""
-        import cv2
-        file_bytes = np.frombuffer(uploaded_file.read(), dtype=np.uint8)
-        img = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
-        if img is None:
-            return None
+    # Image-to-GeoJSON conversion helper (MOVED TO TOP LEVEL)
 
-        # Convert to grayscale and threshold
-        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        blurred = cv2.GaussianBlur(gray, (5, 5), 0)
-
-        # Adaptive threshold for better edge detection
-        _, thresh = cv2.threshold(blurred, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-
-        # Find contours
-        contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-        if not contours:
-            return None
-
-        # Get the largest contour
-        largest = max(contours, key=cv2.contourArea)
-
-        # Simplify the contour
-        epsilon = 0.01 * cv2.arcLength(largest, True)
-        approx = cv2.approxPolyDP(largest, epsilon, True)
-
-        # Get image dimensions for normalization
-        h, w = img.shape[:2]
-
-        # Convert pixel coordinates to geographic coordinates
-        # Scale: 1 pixel = scale_factor degrees
-        coords = []
-        for point in approx:
-            px, py = point[0]
-            lng = center_lng + (px - w / 2) * scale_factor
-            lat = center_lat - (py - h / 2) * scale_factor
-            coords.append([round(lng, 6), round(lat, 6)])
-
-        # Close the polygon
-        if coords[0] != coords[-1]:
-            coords.append(coords[0])
-
-        geojson = {
-            "type": "Polygon",
-            "coordinates": [coords]
-        }
-        return geojson
 
     # --- Pre-loaded Reference Boundaries (from CSIDC records) ---
     # Individual plot boundaries (~30-50m sides = 1,500-2,500 m² each)
