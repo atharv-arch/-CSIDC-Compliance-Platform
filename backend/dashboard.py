@@ -328,6 +328,19 @@ def generate_demo_plots(n=20):
         else:
             status = "Compliant"
 
+        lat = round(21.25 + random.uniform(-0.05, 0.05), 6)
+        lon = round(81.63 + random.uniform(-0.05, 0.05), 6)
+        # Generate a small polygon for map display (~40m × 35m plot)
+        d_lat = random.uniform(0.00035, 0.00050)
+        d_lon = random.uniform(0.00040, 0.00055)
+        demo_geojson = {
+            "type": "Polygon",
+            "coordinates": [[
+                [lon, lat], [lon + d_lon, lat], [lon + d_lon, lat + d_lat],
+                [lon, lat + d_lat], [lon, lat]
+            ]]
+        }
+
         demo_plots.append({
             "Plot ID": f"P-{len(st.session_state.plots_data) + i + 1}",
             "Timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
@@ -338,8 +351,9 @@ def generate_demo_plots(n=20):
             "Revenue Loss": loss,
             "Risk Score": risk_score,
             "Status": status,
-            "Lat": round(21.25 + random.uniform(-0.05, 0.05), 6),
-            "Lon": round(81.63 + random.uniform(-0.05, 0.05), 6),
+            "Lat": lat,
+            "Lon": lon,
+            "reference_geojson": demo_geojson,
         })
     return demo_plots
 
