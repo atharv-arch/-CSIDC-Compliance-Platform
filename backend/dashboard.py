@@ -1110,7 +1110,8 @@ elif page == "🔍 Single Plot Comparison":
                     "reference": reference_boundary,
                     "current": current_boundary,
                     "tolerance_m2": 25
-                }
+                },
+                timeout=300  # 5 min timeout to handle Render cold starts + image processing
             )
         except requests.exceptions.ConnectionError:
             st.error("❌ Cannot connect to backend. Make sure Flask is running: `python app.py`")
