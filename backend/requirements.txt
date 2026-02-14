@@ -3,3 +3,13 @@ flask-cors
 shapely
 pyproj
 gunicorn
+streamlit
+requests
+folium
+streamlit-folium
+numpy
+pandas
+matplotlib
+plotly
+reportlab
+opencv-python-headless
