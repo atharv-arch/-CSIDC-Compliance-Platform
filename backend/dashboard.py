@@ -894,7 +894,12 @@ elif page == "🔍 Single Plot Comparison":
     if ref_method == "📌 CSIDC Registry (Pre-loaded)":
         selected_plot = st.selectbox("Select Allotted Plot", [k for k in CSIDC_PLOT_REGISTRY.keys() if k != "Custom — Paste GeoJSON manually"])
         reference_geojson = CSIDC_PLOT_REGISTRY[selected_plot]
-        st.success(f"✅ Reference boundary loaded — {selected_plot}")
+        # Show area so user knows what size to match
+        try:
+            ref_area = shape(reference_geojson).area * (111320 ** 2)  # rough deg² to m²
+            st.success(f"✅ Reference boundary loaded — {selected_plot} (≈ {ref_area:,.0f} m²)")
+        except Exception:
+            st.success(f"✅ Reference boundary loaded — {selected_plot}")
         with st.expander("View Reference GeoJSON"):
             st.json(reference_geojson)
 
@@ -1008,9 +1013,9 @@ elif page == "🔍 Single Plot Comparison":
 
     col_a, col_b = st.columns(2)
     with col_a:
-        land_rate = st.number_input("Land Rate (₹ per m²)", value=2000)
+        land_rate = st.number_input("Land Rate (₹ per m²)", value=350, help="CSIDC typical: ₹200-500/m²")
     with col_b:
-        lease_rate = st.number_input("Lease Rate (₹ per m²)", value=150)
+        lease_rate = st.number_input("Lease Rate (₹ per m²)", value=50, help="CSIDC typical: ₹30-80/m²")
 
     if st.button("🚀 Run Comparison"):
 
