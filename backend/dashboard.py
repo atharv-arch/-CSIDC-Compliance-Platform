@@ -426,9 +426,10 @@ if st.sidebar.button("🎲 Generate Demo Dataset (20 Plots)"):
     st.rerun()
 
 if st.sidebar.button("🗑 Clear All Data"):
+    # Nuclear clear — remove ALL session state keys for a fresh start
+    for key in list(st.session_state.keys()):
+        del st.session_state[key]
     st.session_state.plots_data = []
-    if "multi_map" in st.session_state:
-        del st.session_state.multi_map
     st.sidebar.success("✅ All data cleared!")
     st.rerun()
 
