@@ -901,6 +901,7 @@ elif page == "🔍 Single Plot Comparison":
     ref_method = st.radio("Choose reference source:", [
         "📌 CSIDC Registry (Pre-loaded)",
         "📍 Draw on Map",
+        "📷 Upload Image (PNG/JPEG)",
         "📝 Paste GeoJSON manually"
     ], horizontal=True, key="ref_method")
 
@@ -968,6 +969,35 @@ elif page == "🔍 Single Plot Comparison":
                 st.info("Draw a polygon on the map to define the reference boundary.")
         else:
             st.info("👆 Use the polygon/rectangle tool on the map to draw the reference boundary.")
+
+    elif ref_method == "📷 Upload Image (PNG/JPEG)":
+        st.markdown("""
+        <div style="background:rgba(168,85,247,0.08); border:1px solid rgba(168,85,247,0.15); border-radius:10px; padding:12px; margin-bottom:12px;">
+            <p style="color:#a855f7; font-size:12px; margin:0;">📷 Upload a satellite image or scanned plot map. OpenCV will detect the boundary edges and convert to GeoJSON coordinates.</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+        ref_image = st.file_uploader("Upload Reference Boundary Image", type=["png", "jpg", "jpeg"], key="ref_img_upload")
+
+        ref_geo_col1, ref_geo_col2, ref_geo_col3 = st.columns(3)
+        with ref_geo_col1:
+            ref_center_lat = st.number_input("Center Latitude", value=21.2514, format="%.4f", key="ref_img_lat")
+        with ref_geo_col2:
+            ref_center_lng = st.number_input("Center Longitude", value=81.6296, format="%.4f", key="ref_img_lng")
+        with ref_geo_col3:
+            ref_scale = st.number_input("Scale (°/pixel)", value=0.000005, format="%.6f", key="ref_img_scale",
+                                         help="Smaller = zoomed in. Default works for ~18 zoom level")
+
+        if ref_image:
+            st.image(ref_image, caption="Uploaded Reference Image", use_container_width=True)
+            ref_image.seek(0)
+            reference_geojson = image_to_geojson(ref_image, ref_center_lat, ref_center_lng, ref_scale)
+            if reference_geojson:
+                st.success(f"✅ Extracted {len(reference_geojson['coordinates'][0])} boundary points from image")
+                with st.expander("View Generated GeoJSON"):
+                    st.json(reference_geojson)
+            else:
+                st.error("❌ Could not detect boundary. Try a clearer image with distinct edges.")
 
     elif ref_method == "📝 Paste GeoJSON manually":
         reference_input = st.text_area("Paste Reference Boundary GeoJSON", height=120, key="ref_geo")
